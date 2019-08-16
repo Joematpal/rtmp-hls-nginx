@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Live Streaming</title>
+
+</head>
+
+<body>
+    <!-- <video id="player" height="360" width="640" controls src="http://192.168.50.169:8080/hls/nollieDog.m3u8">
+    </video> -->
+
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <!-- Or if you want a more recent canary version -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/hls.js@canary"></script> -->
+    <video id="video"></video>
+    <script>
+        var video = document.getElementById('video');
+        console.log('what', video.canPlayType("application/vnd.apple.mpegurl"))
+        console.log("Hls.isSupported()", Hls.isSupported())
+        if (Hls.isSupported()) {
+            var hls = new Hls();
+            hls.attachMedia(video);
+            hls.on(Hls.Events.MEDIA_ATTACHED, function () {
+                console.log("video and hls.js are now bound together !");
+                hls.loadSource('http://192.168.50.169:8080/hls/nollieDog.m3u8');
+                hls.on(Hls.Events.MANIFEST_PARSED, function (event, data) {
+                    console.log("manifest loaded, found " + data.levels.length + " quality level");
+                    video.play().then(console.log).catch(console.error);
+
+                });
+            });
+
+            hls.on(Hls.Events.ERROR, function (event, data) {
+                console.log(event, data)
+            });
+        }
+
+    </script>
+</body>
+
+</html>
